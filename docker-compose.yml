@@ -1,0 +1,40 @@
+version: '2' 
+services:
+  nginx:
+    container_name: nginx
+    restart: always
+    build: images/nginx
+    image: nginx
+    ports:
+      - 80:80
+ 
+  backend01:
+    container_name: apache_app1
+    restart: always
+    build: images/webapp1
+    image: apache_app1
+    ports:
+      - 8081:80
+    links:
+      - nginx
+
+  backend02:
+    container_name: apache_app2
+    restart: always
+    build: images/webapp2
+    image: apache_app2
+    ports:
+      - 8082:80
+    links:
+      - nginx
+
+
+  bd:
+    container_name: postgesql
+    image : postgres
+    build: images/postgresql
+    environment:
+      POSTGRES_PASSWORD: postgres
+    links:
+      - backend01
+      - backend02
